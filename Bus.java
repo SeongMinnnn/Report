@@ -1,69 +1,51 @@
 public class Bus {
     static int busNumCheck = 0;
-    static int price = 1000;
     static int maxPassenger = 30;
-    static String status;
-    int fuelGage;
+    int passengerMax = 30;
+    int passengerCurrent = 0;
+    int price = 1000;
+    String status = "운행";
+    int fuelGageCurrent = 100;
     int speed;
-    int statusNum;
     int busNum;
-    public Bus(){
-        maxPassenger = 30;
+
+    public Bus() {
         busNum = busNumCheck++;
-        status = "운행";
-        fuelGage = 100;
         speed = 0;
+        System.out.println(busNum+1 + "번 버스객체 만들어짐!");
     }
 
-    String drive(int num){
-        if (num == 0) status = "운행";
-        else if (num == 1) status = "차고지행";
-        return status;
-    }
-    String statusChange(int statusNum, int fuelGage){
-        status = "운행";
-        if (this.fuelGage <= 10) status = "차고지행";
-        if (this.statusNum == 1) status = "차고지행";
-        return status;
-    }
-    String passengerChange(int passengerCurrent, int passengerNew){
-        if (passengerCurrent + passengerNew <= maxPassenger && status.equals("운행")) passengerCurrent += passengerNew;
-        else System.out.println("탑승이 불가합니다");
-    }
-    String speedChange(int speedChange){
-        if(fuelGage >= 10) speed += speedChange;
-        else System.out.println("주유량을 확인해주세요");
-    }
-}
-class BusDrive{
-    public static void busDrive(){
-        Bus bus = new Bus();
-        int statusNum = 0;
-        System.out.println(bus.drive(statusNum));
-    }
-}
-class BusStatus{
-    public static void busStatus(){
-        Bus bus = new Bus();
-        int statusNum = 0;
-        int fuelGage = 20;
-        System.out.println(bus.statusChange(statusNum, fuelGage));
-    }
-}
+    void busDrive(String status) {
+        if (status.equals("운행")) status = "차고지행";
+        else status = "운행";
+        if (fuelGageCurrent < 10) System.out.println("주유가 필요합니다");
 
-class BusPassenger{
-    public static void busPassenger(){
-        Bus bus = new Bus();
-        int passengerCurrent = 2;
-        int passengerNew = 0;
-        System.out.println(bus.passengerChange(passengerCurrent, passengerNew));
+        System.out.println("상태: "+status);
     }
-}
 
-class BusSpeed {
-    public static void busSpeed(){
-        Bus bus = new Bus();
-        int speedChange = -5;
-        System.out.println(bus.speedChange(speedChange));
+    void passengerAdd(int passengerNew) {
+        if (!(status.equals("운행"))) {
+            System.out.println("운행 중이 아닙니다.");
+            return;
+        }
+        if (passengerCurrent + passengerNew > passengerMax) {
+            System.out.println("최대 승객 수를 초과했습니다");
+            return;
+        }
+
+        passengerCurrent += passengerNew;
+        System.out.println("탑승 승객 수 = " + passengerNew);
+        System.out.println("잔여 승객 수 = " + (passengerMax - passengerCurrent));
+        System.out.println("요금 확인 = " + price * passengerNew);
+        System.out.println("주유량: "+fuelGageCurrent);
+    }
+    void fuelCharge(int fuelGage) {
+        if (!(fuelGage < 100)){
+            status = "연료 탱크를 초과합니다.";
+            return;
+        }
+        fuelGageCurrent += fuelGage;
+
+        System.out.println("주유량: "+fuelGageCurrent);
     }
 }
